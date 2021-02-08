@@ -2,6 +2,11 @@ package br.com.alura.forum.controller.form;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 import br.com.alura.forum.modelo.Curso;
 import br.com.alura.forum.modelo.Topico;
 import br.com.alura.forum.repository.CursoRepository;
@@ -10,8 +15,11 @@ public class TopicoForm implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
+	@NotNull @NotEmpty @Length(min = 5)
 	private String titulo;
+	@NotNull @NotEmpty @Length(min = 10)
 	private String mensagem;
+	@NotNull @NotEmpty
 	private String nomeCurso;
 	
 	
