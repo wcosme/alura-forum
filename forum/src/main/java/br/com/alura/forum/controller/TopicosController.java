@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.alura.forum.controller.dto.DetalhesDoTopicoDTO;
 import br.com.alura.forum.controller.dto.TopicoDTO;
 import br.com.alura.forum.controller.form.TopicoForm;
+import br.com.alura.forum.controller.form.UpdateTopicoForm;
 import br.com.alura.forum.modelo.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
@@ -27,7 +29,7 @@ import br.com.alura.forum.repository.TopicoRepository;
 public class TopicosController {
 	
 	@Autowired
-	private TopicoRepository repository;
+	private TopicoRepository topicoRepository;
 	@Autowired
 	private CursoRepository cursoRepository;
 	
@@ -37,9 +39,9 @@ public class TopicosController {
 		List<Topico> topicos = null;
 		
 		if(nomeCurso == null) {
-			topicos = repository.findAll();
+			topicos = topicoRepository.findAll();
 		}else {
-			topicos = repository.findByCursoNome(nomeCurso);
+			topicos = topicoRepository.findByCursoNome(nomeCurso);
 		}		
 		
 		return TopicoDTO.converter(topicos);
@@ -48,17 +50,24 @@ public class TopicosController {
 	@PostMapping
 	public ResponseEntity<TopicoDTO> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
 		Topico topico = form.converterToEntity(cursoRepository);		
-		repository.save(topico);
+		topicoRepository.save(topico);
 		
 		URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 		return ResponseEntity.created(uri).body(new TopicoDTO(topico));
 	}
 	
-	@RequestMapping("/{id}")
+	@GetMapping("/{id}")
 	public DetalhesDoTopicoDTO getTopicoById(@PathVariable Long id) {
-		Topico topico = repository.getOne(id);
+		Topico topico = topicoRepository.getOne(id);
 		
 		return new DetalhesDoTopicoDTO(topico);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid UpdateTopicoForm form){		
+		Topico topico = form.update(id, topicoRepository);
+		
+		return ResponseEntity.ok(new TopicoDTO(topico));
 	}
 
 }
