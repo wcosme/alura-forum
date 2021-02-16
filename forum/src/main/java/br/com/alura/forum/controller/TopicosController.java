@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -41,6 +43,7 @@ public class TopicosController {
 	private CursoRepository cursoRepository;
 	
 	@GetMapping
+	@Cacheable(value = "listaDeTopicos") // habilita o uso de cache na aplicação.
 	public Page<TopicoDTO> lista(@RequestParam(required = false) String nomeCurso, @PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10) Pageable paginacao){
 						
 		Page<Topico> topicos = null;
@@ -56,6 +59,7 @@ public class TopicosController {
 	
 	@Transactional
 	@PostMapping
+	@CacheEvict(value = "listaDeTopicos", allEntries = true) // Informa ao Spring que limpe determinado cache, no caso o cache do método listar
 	public ResponseEntity<TopicoDTO> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
 		Topico topico = form.converterToEntity(cursoRepository);		
 		topicoRepository.save(topico);
@@ -77,6 +81,7 @@ public class TopicosController {
 	
 	@Transactional
 	@PutMapping("/{id}")
+	@CacheEvict(value = "listaDeTopicos", allEntries = true)
 	public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid UpdateTopicoForm form){
 		Optional<Topico> optional = topicoRepository.findById(id);
 		if(optional.isPresent()) {
@@ -88,6 +93,7 @@ public class TopicosController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@CacheEvict(value = "listaDeTopicos", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id){
 		Optional<Topico> optional = topicoRepository.findById(id);
 		if(optional.isPresent()) {
