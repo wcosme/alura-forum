@@ -17,7 +17,7 @@ public class TokenService {
 	private String expiration;
 	
 	@Value("${forum.jwt.secret}")
-	private String password;
+	private String secret;
 	
 	public String gerarToken(Authentication authentication) {
 		Usuario logado = (Usuario) authentication.getPrincipal();
@@ -29,8 +29,16 @@ public class TokenService {
 				.setSubject(logado.getId().toString())
 				.setIssuedAt(hoje)
 				.setExpiration(dataExpiracao)
-				.signWith(SignatureAlgorithm.HS256, password)
+				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
 	}
 
+	public boolean isTokenValido(String token) {
+		try {
+			Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}		
+	}
 }
