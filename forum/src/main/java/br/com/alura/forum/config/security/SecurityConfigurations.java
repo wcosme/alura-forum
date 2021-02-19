@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.alura.forum.repository.UserRepository;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
@@ -22,6 +24,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 	private AutenticacaoService service;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Override
 	@Bean
@@ -45,7 +49,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Informa ao Spring security que não é para criar sessão, pois vamos usar token.
-		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	//Configurações de recursos estasticos (js, css, imagens e etc.)
