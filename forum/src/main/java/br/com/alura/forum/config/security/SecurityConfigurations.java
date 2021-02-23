@@ -53,10 +53,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	//Configurações de recursos estasticos (js, css, imagens e etc.)
+	//Configurações de recursos estasticos (js, css, imagens e etc.)	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		
+	    web.ignoring()
+	        .antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
 	}
 	
 }
