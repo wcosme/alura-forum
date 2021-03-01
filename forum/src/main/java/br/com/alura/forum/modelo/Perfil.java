@@ -14,17 +14,17 @@ public class Perfil implements GrantedAuthority{
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String nomePerfil;
+	private String nome;
 	
 	public Perfil() {
 		
 	}
 		
 
-	public Perfil(Long id, String nomePerfil) {
+	public Perfil(Long id, String nome) {
 		super();
 		this.id = id;
-		this.nomePerfil = nomePerfil;
+		this.nome = nome;
 	}
 
 
@@ -37,17 +37,15 @@ public class Perfil implements GrantedAuthority{
 	}
 
 	public String getNomePerfil() {
-		return nomePerfil;
+		return nome;
 	}
 
-	public void setNomePerfil(String nomePerfil) {
-		this.nomePerfil = nomePerfil;
+	public void setNomePerfil(String nome) {
+		this.nome = nome;
 	}
-
 
 	@Override
-	public String getAuthority() {
-		
-		return nomePerfil;
+	public String getAuthority() {		
+		return nome;
 	}
 }
