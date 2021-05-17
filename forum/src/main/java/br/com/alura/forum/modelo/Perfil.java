@@ -7,6 +7,9 @@ import javax.persistence.Id;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.Data;
+
+@Data
 @Entity
 public class Perfil implements GrantedAuthority{
 	private static final long serialVersionUID = 1L;
@@ -15,34 +18,7 @@ public class Perfil implements GrantedAuthority{
 	private Long id;
 	
 	private String nome;
-	
-	public Perfil() {
 		
-	}
-		
-
-	public Perfil(Long id, String nome) {
-		super();
-		this.id = id;
-		this.nome = nome;
-	}
-
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNomePerfil() {
-		return nome;
-	}
-
-	public void setNomePerfil(String nome) {
-		this.nome = nome;
-	}
 
 	@Override
 	public String getAuthority() {		
