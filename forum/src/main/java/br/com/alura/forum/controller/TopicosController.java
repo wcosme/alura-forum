@@ -44,7 +44,9 @@ public class TopicosController {
 	
 	@GetMapping
 	@Cacheable(value = "listaDeTopicos") // habilita o uso de cache na aplicação.
-	public Page<TopicoDTO> lista(@RequestParam(required = false) String nomeCurso, @PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10) Pageable paginacao){
+	public Page<TopicoDTO> lista(@RequestParam(required = false) String nomeCurso,
+								 @PageableDefault(sort = "id", direction = Direction.DESC,
+										 page = 0, size = 10) Pageable paginacao){
 						
 		Page<Topico> topicos = null;
 		
